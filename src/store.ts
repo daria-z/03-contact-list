@@ -81,7 +81,7 @@ interface Action {
 
 
 export const useContactsStore = create<State & Action>((set) => ({
-  contactList: {},
+  contactList: null,
   addContact: ({ name, position, phone }) => {
     set((state) => {
       const updatedList = addContact(state.contactList, { name, position, phone });
@@ -103,7 +103,7 @@ export const useContactsStore = create<State & Action>((set) => ({
   clearAllContacts: () => {
     set((state) => {
       console.log('clear all', state)
-      return { contactList: {} }
+      return { contactList: null }
     })
   }
 }));
