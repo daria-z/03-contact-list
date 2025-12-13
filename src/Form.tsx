@@ -5,9 +5,20 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const UserFormSchema = z.object({
-  name: z.string().min(3).trim().toLowerCase(),
-  position: z.string().min(3).trim().toLowerCase(),
-  phone: z.string().startsWith("+7", "Format: +7**********").trim().toLowerCase()
+  name: z.string()
+    .min(3, "Name must be at least 3 characters")
+    .regex(/^[a-zA-Z\s]+$/, "Name must contain only English letters")
+    .trim()
+    .toLowerCase(),
+  position: z.string()
+    .min(3, "Position must be at least 3 characters")
+    .regex(/^[a-zA-Z\s]+$/, "Position must contain only English letters")
+    .trim()
+    .toLowerCase(),
+  phone: z.string()
+    .startsWith("+7", "Format: +7**********")
+    .trim()
+    .toLowerCase()
 })
 
 type FormData = z.infer<typeof UserFormSchema>;
