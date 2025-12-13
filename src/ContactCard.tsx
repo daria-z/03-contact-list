@@ -1,3 +1,4 @@
+import { useContactsStore } from "./store";
 import { Button } from "./Button";
 
 interface ContactCardProps {
@@ -8,6 +9,7 @@ interface ContactCardProps {
 }
 
 export const ContactCard = ({ id, name, position, phone }: ContactCardProps) => {
+  const deleteContact = useContactsStore((state) => state.deleteContact);
   return (
     <div data-id={id}>
       <div>
@@ -20,10 +22,10 @@ export const ContactCard = ({ id, name, position, phone }: ContactCardProps) => 
         <strong>Phone:</strong> {phone}
       </div>
       <div>
-        <Button data-delete="smR-MUDJCMM6dMoCjSWkS" variant="danger">
+        <Button onClick={() => deleteContact({ id, name })} variant="danger">
           Delete
         </Button>
-        <Button data-edit="smR-MUDJCMM6dMoCjSWkS" variant="secondary">
+        <Button variant="secondary">
           Edit
         </Button>
       </div>
