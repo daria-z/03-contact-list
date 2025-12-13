@@ -3,6 +3,13 @@ import { nanoid } from 'nanoid';
 
 const normalizeString = (str: string) => str.trim().toLowerCase();
 
+export class DuplicateContactError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'DuplicateContactError';
+  }
+}
+
 const addContact = (list: ContactsByLetter | null, { name, position, phone}: Contact) => {
   const firstLetter = normalizeString(name).slice(0, 1);
   const contact = {
@@ -15,6 +22,7 @@ const addContact = (list: ContactsByLetter | null, { name, position, phone}: Con
   const updatedList = list ? { ...list } : {};
 
   if (Object.hasOwn(updatedList, firstLetter)) {
+    if (updatedList[firstLetter].find((c) => c.name === name)) throw new DuplicateContactError(`Contact with name "${name}" already exists`);
     updatedList[firstLetter] = [...updatedList[firstLetter], contact];
   } else {
     updatedList[firstLetter] = [contact];
@@ -48,12 +56,9 @@ const editContact = (list: ContactsByLetter | null, contact: Contact) => {
   const firstLetter = normalizeString(contact.name).slice(0, 1);
 
   const filteredGroup = list[firstLetter]?.filter(c => c.id !== contact.id) || [];
-
   const updatedGroup = [...filteredGroup, contact];
 
   return { ...list, [firstLetter]: updatedGroup };
-
-
 }
 interface Contact {
   id?: string,
@@ -69,7 +74,7 @@ type ContactsByLetter = {
 }
 
 interface State {
-  contactList: ContactsByLetter | null;
+  contactList: ContactsByLetter | null
 }
 
 interface Action {

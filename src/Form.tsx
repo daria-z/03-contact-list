@@ -1,9 +1,8 @@
-import { useContactsStore } from "./store";
-import { useForm, type SubmitHandler, type SubmitErrorHandler } from "react-hook-form";
+import { useContactsStore, DuplicateContactError } from "./store";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { Button } from "./Button";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 
 const UserFormSchema = z.object({
   name: z.string().min(3).trim().toLowerCase(),
@@ -17,6 +16,7 @@ export const Form = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(UserFormSchema) });
 
@@ -25,18 +25,25 @@ export const Form = () => {
   const state = useContactsStore.getState();
 
   const submit: SubmitHandler<FormData> = (data) => {
-    addContact(data);
-    console.log(data);
-  };
-
-  const error: SubmitErrorHandler<FormData> = () => {
-    // const validationResult = UserFormSchema.parse(data);
-    // console.error(validationResult);
+    try {
+      addContact(data);
+      console.log(data);
+    } catch (error) {
+      if (error instanceof DuplicateContactError) {
+        setError("name", {
+          type: "manual",
+          message: error.message
+        });
+        console.log(error)
+        return;
+      }
+      throw error;
+    }
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit(submit, error)}>
+      <form onSubmit={handleSubmit(submit)}>
         <label>Name</label>
         <input {...register("name", { required: true })} placeholder="Name" />
         {errors.name && <p>{errors.name.message}</p>}
