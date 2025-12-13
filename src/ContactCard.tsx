@@ -1,17 +1,15 @@
 import { Button } from "./Button";
-import { useContactStore } from "./store";
 
 interface ContactCardProps {
+  id?: string,
   name: string,
   position: string,
   phone: string
 }
 
-export const ContactCard = ({ name, position, phone }: ContactCardProps) => {
-  const count = useContactStore((state) => state.contactsCount);
-
+export const ContactCard = ({ id, name, position, phone }: ContactCardProps) => {
   return (
-    <div data-id="">
+    <div data-id={id}>
       <div>
         <strong>Name:</strong> {name}
       </div>
@@ -31,7 +29,4 @@ export const ContactCard = ({ name, position, phone }: ContactCardProps) => {
       </div>
     </div>
   );
-}
-
-
-
+};
