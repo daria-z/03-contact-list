@@ -1,5 +1,6 @@
 import { AlphabetBlock } from './AlphabetBlock';
 import { Form } from "./Form";
+import { ListControls } from './ListControls';
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
       </header>
       <main>
         <Form />
+        <ListControls />
         <AlphabetBlock />
       </main>
       <span>timestamp: {now.toLocaleTimeString()}</span>
